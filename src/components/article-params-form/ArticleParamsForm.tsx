@@ -5,10 +5,10 @@ import {RadioGroup} from 'src/ui/radio-group';
 import { Text } from 'src/ui/text';
 import { Separator } from 'src/ui/separator';
 import { ArticleStateType, fontFamilyOptions, OptionType, fontSizeOptions, fontColors, backgroundColors, contentWidthArr } from 'src/constants/articleProps';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, FormEvent } from 'react';
 import styles from './ArticleParamsForm.module.scss';
 import clsx from 'clsx';
-import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
+import { useOutsideClickClose } from './hooks/useOutsideClickClose';
 
 interface ArticleParamsFormProps {
 	initialState: ArticleStateType;
@@ -68,7 +68,7 @@ export const ArticleParamsForm = ({ initialState, onApply, onReset }: ArticlePar
 		setWidth(initialState.contentWidth);
 	}, [initialState]);
 
-	const handleApply = (event: React.MouseEvent) => {
+	const handleApply = (event: FormEvent) => {
 		event.preventDefault();
 		const newState = {
 			fontFamilyOption: selectedFont,
@@ -88,7 +88,7 @@ export const ArticleParamsForm = ({ initialState, onApply, onReset }: ArticlePar
 		<>
 			<ArrowButton isOpen={isOpen} onClick={toggleSidebar}/>
 			<aside ref={rootRef} className={clsx(styles.container, { [styles.container_open]: isOpen })}>
-				<form className={styles.form}>
+				<form className={styles.form} onSubmit={handleApply}>
 					<Text size={31} weight={800} uppercase={true} align="left" family='open-sans'>
 						Параметры статьи
 					</Text>
@@ -100,7 +100,7 @@ export const ArticleParamsForm = ({ initialState, onApply, onReset }: ArticlePar
 					<Select selected={selectedWidth} options={contentWidthArr} title='Ширина контента' onChange={handleWidth} onClose={handleCloseSelect}/>
 					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' htmlType='reset' type='clear' onClick={handleReset}/>
-						<Button title='Применить' htmlType='submit' type='apply' onClick={handleApply} />
+						<Button title='Применить' htmlType='submit' type='apply'/>
 					</div>
 				</form>
 			</aside>
